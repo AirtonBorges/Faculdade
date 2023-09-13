@@ -18,6 +18,7 @@
 
 int valor_total = 0;
 pthread_mutex_t em = PTHREAD_MUTEX_INITIALIZER;
+double time1, timedif;
 
 int alteraValor( int delta) {
 	int novo_valor;
@@ -43,20 +44,25 @@ void thread_incrementa(void) {
 
 void thread_decrementa(void) {
 	while(1){
+		time1 = (double) clock();
+		time1 = time1 / CLOCKS_PER_SEC;  
 		sleep(2);
 		alteraValor(-1);
+		timedif = ( ((double) clock()) / CLOCKS_PER_SEC) - time1;
+		printf("The elapsed time is %f seconds\n", timedif);
 	}
 }
 
 int main( int argc, char *argv[]){
 
-        pthread_t t1, t2, t3, t4;
+	pthread_t t1, t2, t3, t4;
 
-        pthread_create(&t1, NULL, (void *) thread_incrementa, NULL);
-        pthread_create(&t2, NULL, (void *) thread_incrementa, NULL);
-        pthread_create(&t3, NULL, (void *) thread_decrementa, NULL);
-        pthread_create(&t4, NULL, (void *) thread_decrementa, NULL);
+	pthread_create(&t1, NULL, (void *) thread_incrementa, NULL);
+	pthread_create(&t2, NULL, (void *) thread_incrementa, NULL);
+	pthread_create(&t4, NULL, (void *) thread_decrementa, NULL);
+
 
 	printf("Digite enter para terminar o programa:\n");
+
 	getchar();
 }
