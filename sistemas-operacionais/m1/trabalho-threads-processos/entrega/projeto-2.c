@@ -1,65 +1,86 @@
-#include	<pthread.h>
-#include	<stdio.h>
-#include	<unistd.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <time.h>
+#include <math.h>
 
-#define TAMANHO_VETOR 1000000
+#define TAMANHO_VETOR 100000
 
 int valor_total = 0;
 int vetor[TAMANHO_VETOR];
-void preenche_vetor(void) {
-    int valor = TAMANHO_VETOR;
-    for (int i = 0; i <= TAMANHO_VETOR; i++) {
-        vetor[i] = valor - i;
+double timer = 0;
+
+void inicia_timer() {
+	timer = (double) clock();
+	timer = timer / CLOCKS_PER_SEC;
+}
+
+void finaliza_timer() {
+	double timedif = ( ((double) clock()) / CLOCKS_PER_SEC) - timer;
+	printf("The elapsed time is %f seconds\n", timedif);
+}
+
+void preenche_vetor() {
+    for (int i = 0; i < TAMANHO_VETOR; i++) {
+        vetor[i] = TAMANHO_VETOR - i;
     }
 }
 
 void mostra_vetor(void) {
     printf("\n[ ");
-    for (int i = 0; i <= TAMANHO_VETOR; i++) {
+    for (int i = 0; i < TAMANHO_VETOR; i++) {
         printf("%d ", vetor[i]);
     }
     printf("]\n");
 }
 
-void ordena_vetor(int vetor[], int tamanho) {
-    int index = 0;
-    int index2 = 0;
+void ordena_vetor(int inicio, int fim, int* vetor) {
     int temporario = 0;
-    while (1) {
-        while (1) {
-            int atual = vetor[index];
-            int proximo = vetor[index + 1];
+    for(int i = inicio; i < fim; i++)
+    {
+        for(int j = inicio; j < fim - 1; j++)
+        {
+            int atual = vetor[j];
+            int proximo = vetor[j + 1];
             if (atual > proximo) {
                 temporario = atual;
-                vetor[index] = proximo;
-                vetor[index + 1] = temporario;
+                vetor[j] = proximo;
+                vetor[j + 1] = temporario;
             }
-            index++;
-            if (index == tamanho) {
-                index = 0;
-                break;
-            }
-        }
-        index2++;
-        if (index2 == tamanho) {
-            break;
         }
     }
 }
 
-int main( int argc, char *argv[]){
-    pthread_t tid;
-    pthread_attr_t attr; 
+void ordena_thread_1(void *param) {
+    int* vetor_inicial = param;
+    int primeira_metade = TAMANHO_VETOR - (TAMANHO_VETOR / 2);
+    ordena_vetor(0, primeira_metade, vetor_inicial);
+}
 
-    pthread_attr_init(&attr);
-    pthread_create(&tid,&attr,runner,argv[1]);
+void ordena_thread_2(void *param) {
+    int* vetor_inicial = param;
+    int primeira_metade = TAMANHO_VETOR - (TAMANHO_VETOR / 2);
+    ordena_vetor(primeira_metade, TAMANHO_VETOR, vetor_inicial);
+}
 
+void ordena_com_threads() {
+    pthread_t tid_ordena_vetor_1, tid_ordena_vetor_2;
+    pthread_create(&tid_ordena_vetor_1, NULL, (void *) ordena_thread_1, vetor);
+    pthread_create(&tid_ordena_vetor_2, NULL, (void *) ordena_thread_2, vetor);
+    pthread_join(tid_ordena_vetor_2, NULL);
+    pthread_join(tid_ordena_vetor_1, NULL);
+}
+
+int main(int argc, char *argv[]){
+    printf("Ordenacao sem threads: \n");
     preenche_vetor();
-    mostra_vetor();
-    ordena_vetor(vetor, TAMANHO_VETOR / 2);
-    ordena_vetor(vetor, TAMANHO_VETOR / 2);
-    mostra_vetor();
+    inicia_timer();
+    ordena_vetor(0, TAMANHO_VETOR, vetor);
+    finaliza_timer();
 
-    // pthread_create(&t1, NULL, (void *) thread_ordena, NULL);
-    // pthread_join(tid,NULL);
+    printf("Ordenacao com threads: \n");
+    preenche_vetor();
+    inicia_timer();
+    ordena_com_threads();
+    finaliza_timer();
 }

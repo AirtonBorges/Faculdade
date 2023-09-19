@@ -11,3 +11,20 @@ menor (descrente) não importando o valor das posições, desde que respeita ess
 
 ## Exemplos:
 https://github.com/VielF/SO-Codes
+
+
+## Problemas
+- [] Calculo de matrizes não está mais rápido, por quê? 
+#### Hipotese 1: estão iterando muitos itens
+- [] Teste: Ver quanto tempo uma thread unica demora pra executar
+Multiplicacao sem threads: 
+The elapsed time is 0.587363 seconds
+Multiplicacao com threads: 
+The elapsed time is 0.079316 seconds <-- Uma thread
+
+Multiplicacao sem threads: 
+The elapsed time is 0.479807 seconds
+Multiplicacao com threads: 
+The elapsed time is 0.269583 seconds <-- Duas threads (parece sequencial)
+
+- threads individuais tem virtualmente a mesma quantidade de tempo de execução
