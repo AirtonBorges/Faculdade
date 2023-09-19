@@ -4,7 +4,7 @@
 #include <time.h>
 #include <math.h>
 
-#define TAMANHO_VETOR 100000
+#define TAMANHO_VETOR 18000
 
 int valor_total = 0;
 int vetor[TAMANHO_VETOR];
@@ -15,9 +15,9 @@ void inicia_timer() {
 	timer = timer / CLOCKS_PER_SEC;
 }
 
-void finaliza_timer() {
+double finaliza_timer() {
 	double timedif = ( ((double) clock()) / CLOCKS_PER_SEC) - timer;
-	printf("The elapsed time is %f seconds\n", timedif);
+    return timedif;
 }
 
 void preenche_vetor() {
@@ -72,15 +72,31 @@ void ordena_com_threads() {
 }
 
 int main(int argc, char *argv[]){
+    double tempo_maximo_de_execucao_sem_threads = 0;
+    double tempo_maximo_de_execucao_com_threads = 0;
+    double tempo_sem_threads = 0;
+    double tempo_com_threads = 0;
+    
+    for (int i = 0; i < 5; i++) {
+        preenche_vetor();
+        inicia_timer();
+        ordena_vetor(0, TAMANHO_VETOR, vetor);
+        tempo_sem_threads = finaliza_timer();
+        if(tempo_sem_threads > tempo_maximo_de_execucao_sem_threads)
+            tempo_maximo_de_execucao_sem_threads = tempo_sem_threads;
+
+
+        preenche_vetor();
+        inicia_timer();
+        ordena_com_threads();
+        tempo_com_threads = finaliza_timer();
+        if(tempo_com_threads > tempo_maximo_de_execucao_com_threads)
+            tempo_maximo_de_execucao_com_threads = tempo_com_threads;
+    }
+
     printf("Ordenacao sem threads: \n");
-    preenche_vetor();
-    inicia_timer();
-    ordena_vetor(0, TAMANHO_VETOR, vetor);
-    finaliza_timer();
+    printf("The elapsed time is %f seconds\n", tempo_maximo_de_execucao_sem_threads);
 
     printf("Ordenacao com threads: \n");
-    preenche_vetor();
-    inicia_timer();
-    ordena_com_threads();
-    finaliza_timer();
+    printf("The elapsed time is %f seconds\n", tempo_maximo_de_execucao_com_threads);
 }
