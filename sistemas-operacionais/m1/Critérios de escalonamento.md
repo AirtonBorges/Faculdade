@@ -1,0 +1,3 @@
+- Uilização da CPU
+- Vazão: Número de processos que concluem sua execução por unidade de tempo
+- Tempo de conclusão

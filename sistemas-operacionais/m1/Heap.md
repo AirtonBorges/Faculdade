@@ -1,0 +1,1 @@
+- Alocação dinâmica de memória, enquanto o sistema está em execução

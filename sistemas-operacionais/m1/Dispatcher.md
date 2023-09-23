@@ -1,0 +1,2 @@
+- Chaveamento de contexto
+- Responsável por salvar a memória atual e impedir que o processador continue resiliente nos dados de um processo

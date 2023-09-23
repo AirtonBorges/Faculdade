@@ -1,0 +1,1 @@
+- Informações de que programa consegue usar que memória 
