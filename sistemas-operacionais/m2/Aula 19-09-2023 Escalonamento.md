@@ -8,4 +8,6 @@ São necessários [[Critérios de escalonamento]], para permitir que o escalonam
 - Uma fila [[Fifo]]
 
 
-### Todo: Analizar exercícios
+-- Dar alguns passos pra trás:
+Fazer alguns exercícios da [[Sincronização]]
+### Todo: [[Analizar exercícios]]
