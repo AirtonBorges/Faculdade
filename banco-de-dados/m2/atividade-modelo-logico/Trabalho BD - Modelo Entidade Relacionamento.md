@@ -24,7 +24,7 @@ relacionados a normalização da estrutura;
 ### TODO
 - [] Trazer dados do slide pro doc
 
-## Capítulo 2 – Projeto Conceitual (iniciar em uma nova página) (2 pontos)
+## Item 4 – Capítulo 2 – Projeto Conceitual (iniciar em uma nova página) (2 pontos)
 - [ ] Explicar o que é e qual o principal objetivo do projeto conceitual, citando, no 
 mínimo, um autor (2 parágrafos, no mínimo).
 - [ ] Inserir uma imagem do Diagrama de Entidade-Relacionamento (DER) do projeto
