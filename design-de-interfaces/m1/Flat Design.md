@@ -1,0 +1,3 @@
+- Design focado em passar a informação
+- Não usa relevos ou profundidade
+- Não usa de fotorrealismo

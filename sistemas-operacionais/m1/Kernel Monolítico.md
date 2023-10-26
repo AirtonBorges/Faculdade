@@ -1,0 +1,2 @@
+- Um programa principal invoca o serviço solicitado
+- Os programas rodam ao mesmo tempo, levantados e dividindo os mesmos recursos
