@@ -12,10 +12,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="addresses_16.txt" />
-      <Content Include="addresses_16.txt">
+      <Content Include="addresses_32b.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+        <Content Include="addresses_16b.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>
