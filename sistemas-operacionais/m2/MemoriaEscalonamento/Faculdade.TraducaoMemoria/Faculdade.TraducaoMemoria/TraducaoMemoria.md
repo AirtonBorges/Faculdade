@@ -15,3 +15,10 @@
 110000 (111111 << DeslocamentoPagina + NumeroBitsSubPagina)
 001100  ((111111 << DeslocamentoPagina) >> QuantidadeBitsPagina)
 000011 (~(111111 << 2))
+
+## TODO:
+- [x] Terminar algoritmo principal
+- [x] Relatório
+- [ ] Adicionar executável no git
+- [ ] Fazer versão com Hash table
+- [ ] Fazer GUI melhorada

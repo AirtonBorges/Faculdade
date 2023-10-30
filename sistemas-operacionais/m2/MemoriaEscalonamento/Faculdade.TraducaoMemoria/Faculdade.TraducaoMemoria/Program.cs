@@ -14,37 +14,49 @@ if (quantidadeBits == 32)
     Console.Write("- Digite a tamanho do deslocamento de página: ");
     var tamanhoDeslocamentoPaginas = int.Parse(Console.ReadLine() ?? throw new Exception("Digite um valor válido"));
     Console.Write("- Digite a quantidade de bits reservados para as sub-páginas: ");
+
     var quantidadeBitsSubPagina = int.Parse(Console.ReadLine() ?? throw new Exception("Digite um valor válido"));
-    Console.Write("- Digite o endereço fisíco: ");
-    var input = uint.Parse(Console.ReadLine() ?? throw new Exception("Digite um valor válido"));
-
-    var quantidadeBitsPagina = (int)Math.Log2(tamanhoDeslocamentoPaginas);
     var tamanhoEspacoBitsSubpaginas = Math.Pow(2, quantidadeBitsSubPagina);
+    var quantidadeBitsPagina = (int)Math.Log2(tamanhoDeslocamentoPaginas);
+    var tabelaPaginas = LerArquivo32b("data_memory.txt");
 
-    var tlb = LerArquivo32b("addresses_32b.txt");
+    var enderecos = new List<uint>();
 
-    // Calcular endereço
-    numeroPagina = ObterNumeroDaPagina((quantidadeBitsPagina + quantidadeBitsSubPagina), input);
-    numeroSubPagina = ObterNumeroDaSubPagina(quantidadeBitsPagina, quantidadeBitsSubPagina, input);
-    deslocamentoPagina = ObterDeslocamento(quantidadeBitsPagina, input);
+    if (args.Length == 0)
+    {
+        Console.Write("- Digite o endereço virtual: ");
+        enderecos.Add(uint.Parse(Console.ReadLine() ?? throw new Exception("Digite um valor válido")));
+    }
+    else
+        enderecos = LerEnderecos("addresses_32b.txt");
 
-    // Mostrar resultado
-    Console.WriteLine("==================== RESULTADO ====================");
-    var enderecoMemoria = tlb[(int)numeroPagina][(int)numeroSubPagina][(int)deslocamentoPagina];
-    var numeroLinha = (numeroPagina * tamanhoEspacoBitsSubpaginas * tamanhoDeslocamentoPaginas)
-                      + (tamanhoDeslocamentoPaginas * numeroSubPagina + deslocamentoPagina);
 
-    Console.WriteLine($"Página: {numeroPagina}");
-    Console.WriteLine($"Sub-página: {numeroSubPagina}");
-    Console.WriteLine("Deslocamento de página: " + deslocamentoPagina);
-    Console.WriteLine("Endereço de Memória:  " + enderecoMemoria);
-    Console.WriteLine("Linha em que o endereço pode ser encontrado: " + numeroLinha);
-    Console.WriteLine("===================================================");
+    enderecos.ForEach(pEndereco =>
+    {
+        // Calcular endereço
+        numeroPagina = ObterNumeroDaPagina((quantidadeBitsPagina + quantidadeBitsSubPagina), pEndereco);
+        numeroSubPagina = ObterNumeroDaSubPagina(quantidadeBitsPagina, quantidadeBitsSubPagina, pEndereco);
+        deslocamentoPagina = ObterDeslocamento(quantidadeBitsPagina, pEndereco);
 
-    // Ler arquivo e criar simulação do TLB
+        // Mostrar resultado
+        Console.WriteLine("==================== RESULTADO ====================");
+        var enderecoMemoria = tabelaPaginas[(int)numeroPagina][(int)numeroSubPagina][(int)deslocamentoPagina];
+        var numeroLinha = (numeroPagina * tamanhoEspacoBitsSubpaginas * tamanhoDeslocamentoPaginas)
+                          + (tamanhoDeslocamentoPaginas * numeroSubPagina + deslocamentoPagina);
+
+        Console.WriteLine($"Endereço: {pEndereco}");
+        Console.WriteLine($"Página: {numeroPagina}");
+        Console.WriteLine($"Sub-página: {numeroSubPagina}");
+        Console.WriteLine("Deslocamento de página: " + deslocamentoPagina);
+        Console.WriteLine("Endereço de Memória:  " + enderecoMemoria);
+        Console.WriteLine("Linha em que o endereço pode ser encontrado: " + numeroLinha);
+        Console.WriteLine("===================================================");
+    });
+
+    // Ler arquivo e criar simulação da tabela de páginas
     List<List<List<string>>> LerArquivo32b(string pCaminhoArquivo)
     {
-        var paginasTlb = new List<List<List<string>>> {
+        var paginas = new List<List<List<string>>> {
             new()
             {
                 new List<string>()
@@ -56,18 +68,18 @@ if (quantidadeBits == 32)
             using StreamReader streamReader = new StreamReader(pCaminhoArquivo);
             while (streamReader.Peek() >= 0)
             {
-                paginasTlb[^1][^1].Add(streamReader.ReadLine() ?? throw new InvalidOperationException("Caminho não encontrado"));
+                paginas[^1][^1].Add(streamReader.ReadLine() ?? throw new InvalidOperationException("Caminho não encontrado"));
 
-                if (paginasTlb[^1].Count % tamanhoEspacoBitsSubpaginas == 0 && paginasTlb[^1][^1].Count == tamanhoDeslocamentoPaginas)
+                if (paginas[^1].Count % tamanhoEspacoBitsSubpaginas == 0 && paginas[^1][^1].Count == tamanhoDeslocamentoPaginas)
                 {
-                    paginasTlb.Add(new List<List<string>>()
+                    paginas.Add(new List<List<string>>()
                     {
                         new ()
                     });
                 }
-                if (paginasTlb[^1][^1].Count % tamanhoDeslocamentoPaginas == 0 && paginasTlb[^1][^1].Count != 0 )
+                if (paginas[^1][^1].Count % tamanhoDeslocamentoPaginas == 0 && paginas[^1][^1].Count != 0 )
                 {
-                    paginasTlb[^1].Add(new List<string>());
+                    paginas[^1].Add(new List<string>());
                 }
             }
         }
@@ -76,37 +88,49 @@ if (quantidadeBits == 32)
             Console.WriteLine("Erro: {0}", xException.Message);
         }
 
-        return paginasTlb;
+        return paginas;
     }
 }
 
-if (quantidadeBits == 16)
+if (quantidadeBits >= 16 && quantidadeBits < 32)
 {
     Console.Write("- Digite a tamanho do deslocamento de página: ");
     var tamanhoDeslocamentoPaginas = int.Parse(Console.ReadLine() ?? throw new Exception("Digite um valor válido"));
-    Console.Write("- Digite o endereço fisíco: ");
-    var input = uint.Parse(Console.ReadLine() ?? throw new Exception("Digite um valor válido"));
+    Console.Write("- Digite o endereço virtual: ");
     var quantidadeBitsPagina = (int)Math.Log2(tamanhoDeslocamentoPaginas);
 
-    numeroPagina = ObterNumeroDaPagina(quantidadeBitsPagina, input);
-    deslocamentoPagina = ObterDeslocamento(quantidadeBitsPagina, input);
+    var paginas = LerArquivo16b("data_memory.txt");
+    var enderecos = new List<uint>();
 
-    var tlb = LerArquivo16b("addresses_16b.txt");
+    if (args.Length == 0)
+    {
+        Console.Write("- Digite o endereço virtual: ");
+        enderecos.Add(uint.Parse(Console.ReadLine() ?? throw new Exception("Digite um valor válido")));
+    }
+    else
+        enderecos = LerEnderecos("addresses_32b.txt");
 
-    Console.WriteLine("==================== RESULTADO ====================");
-    var enderecoMemoria = tlb[(int)numeroPagina][(int)deslocamentoPagina];
-    var numeroLinha = tamanhoDeslocamentoPaginas * numeroPagina + deslocamentoPagina;
+    enderecos.ForEach(pEndereco =>
+    {
+        numeroPagina = ObterNumeroDaPagina(quantidadeBitsPagina, pEndereco);
+        deslocamentoPagina = ObterDeslocamento(quantidadeBitsPagina, pEndereco);
 
-    Console.WriteLine($"Página: {numeroPagina}");
-    Console.WriteLine("Deslocamento de página: " + deslocamentoPagina);
-    Console.WriteLine("Endereço de Memória:  " + enderecoMemoria);
-    Console.WriteLine("Linha em que o endereço pode ser encontrado: " + numeroLinha);
-    Console.WriteLine("===================================================");
+        Console.WriteLine("==================== RESULTADO ====================");
+        var enderecoMemoria = paginas[(int)numeroPagina][(int)deslocamentoPagina];
+        var numeroLinha = tamanhoDeslocamentoPaginas * numeroPagina + deslocamentoPagina;
 
-    // Ler arquivo e criar simulação do TLB
+        Console.WriteLine($"Endereço: {pEndereco}");
+        Console.WriteLine($"Página: {numeroPagina}");
+        Console.WriteLine("Deslocamento de página: " + deslocamentoPagina);
+        Console.WriteLine("Endereço de Memória:  " + enderecoMemoria);
+        Console.WriteLine("Linha em que o endereço pode ser encontrado: " + numeroLinha);
+        Console.WriteLine("===================================================");
+    });
+
+    // Ler arquivo e criar simulação da tabela de páginas
     List<List<string>> LerArquivo16b(string pCaminhoArquivo)
     {
-        var paginasTlb = new List<List<string>> {
+        var paginas = new List<List<string>> {
             new()
         };
 
@@ -115,11 +139,12 @@ if (quantidadeBits == 16)
             using StreamReader streamReader = new StreamReader(pCaminhoArquivo);
             while (streamReader.Peek() >= 0)
             {
-                paginasTlb[^1].Add(streamReader.ReadLine() ?? throw new InvalidOperationException("Caminho não encontrado"));
+                paginas[^1].Add(streamReader.ReadLine()
+                                   ?? throw new InvalidOperationException("Caminho não encontrado"));
 
-                if (paginasTlb[^1].Count % tamanhoDeslocamentoPaginas == 0 && paginasTlb[^1].Count != 0)
+                if (paginas[^1].Count % tamanhoDeslocamentoPaginas == 0 && paginas[^1].Count != 0)
                 {
-                    paginasTlb.Add(new List<string>());
+                    paginas.Add(new List<string>());
                 }
             }
         }
@@ -128,10 +153,9 @@ if (quantidadeBits == 16)
             Console.WriteLine("Erro: {0}", xException.Message);
         }
 
-        return paginasTlb;
+        return paginas;
     }
 }
-
 
 uint ObterDeslocamento(int pQuantidadeBits, uint pInput)
 {
@@ -158,3 +182,22 @@ uint ObterNumeroDaPagina(int pQuantidadeBits, uint pInput)
     return retorno;
 }
 
+List<uint> LerEnderecos(string pCaminho)
+{
+    var enderecos = new List<uint>();
+    try
+    {
+        using StreamReader streamReader = new StreamReader(pCaminho);
+        while (streamReader.Peek() >= 0)
+        {
+            enderecos.Add(uint.Parse(streamReader.ReadLine()
+                                     ?? throw new InvalidOperationException("Caminho não encontrado")));
+        }
+    }
+    catch (Exception xException)
+    {
+        Console.WriteLine("Erro: {0}", xException.Message);
+    }
+
+    return enderecos;
+}
