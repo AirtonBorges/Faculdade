@@ -76,7 +76,6 @@ if (quantidadeBits == 32)
                     {
                         new ()
                     });
-                }
                 if (paginas[^1][^1].Count % tamanhoDeslocamentoPaginas == 0 && paginas[^1][^1].Count != 0 )
                 {
                     paginas[^1].Add(new List<string>());
