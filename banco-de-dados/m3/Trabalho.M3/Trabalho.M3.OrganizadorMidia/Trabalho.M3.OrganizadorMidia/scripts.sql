@@ -1,0 +1,28 @@
+﻿CREATE TABLE IF NOT EXISTS Midia (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Titulo TEXT,
+    Sinopse TEXT,
+    DataLancamento TEXT,
+    Plataforma TEXT,
+    Url TEXT NULL 
+);
+
+CREATE TABLE IF NOT EXISTS Pessoa
+(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Nome TEXT NOT NULL,
+    Sobrenome TEXT NOT NULL,
+    DataNascimento DATETIME NOT NULL,
+    Email TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Agendamento
+(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    IdUsuario INTEGER NOT NULL,
+    IdMidia INTEGER NOT NULL,
+    DataAgendamento DATETIME NOT NULL,
+    Estado TEXT NOT NULL,
+    FOREIGN KEY (IdUsuario) REFERENCES Pessoa(Id),
+    FOREIGN KEY (IdMidia) REFERENCES Midia(Id)
+);
