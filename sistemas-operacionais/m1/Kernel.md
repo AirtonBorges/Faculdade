@@ -8,7 +8,7 @@
 [[Timer]]
 [[Processo]]
 [[Memória]]
-[[Estado do processo]]
+[[Organizar/Estado do processo]]
 [[Process Control Block]]
 [[Scheduller]]
 [[Context Switch]]

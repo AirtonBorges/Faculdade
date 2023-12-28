@@ -1,0 +1,11 @@
+- [x] Terminar algoritmo principal  
+	- [ ] Testar modificar o if pra **16 bits à 32 bit**
+	- [ ] Trocar aquivos de 16 e 32 b pelo arquivo de verdade 
+- [ ] Relatório
+	- [ ] Arrumar documentação
+	- [ ] Fazer parágrafo de conclusão
+	- [ ] Gerar PDF
+- [ ] Postar no git
+	- [ ] Adionar PDF e executável
+- [ ] Fazer versão com Hash table  
+- [ ] Fazer GUI melhorada
