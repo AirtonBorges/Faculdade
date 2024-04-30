@@ -60,7 +60,7 @@ namespace Trabalho.M3.OrganizadorMidia.Controllers
                             Sobrenome = @Sobrenome,
                             DataNascimento = @DataNascimento,
                             Email = @Email
-                    WHERE Id = @id",
+                    WHERE Id = @pId",
                     new
                     {
                         pId,
